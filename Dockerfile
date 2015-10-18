@@ -1,7 +1,7 @@
 FROM haskell:7.10
 
 # Start pandoc install
-ENV PANDOC_VERSION "1.15.1"
+ENV PANDOC_VERSION "1.15.1.1"
 RUN cabal update && cabal install pandoc-${PANDOC_VERSION}
 
 RUN apt-get update -y \

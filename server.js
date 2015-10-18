@@ -5,7 +5,7 @@ var express = require('express');
 var app = express();
 var tmp = require('tmp');
 
-var timeout = process.env.PANDOC_TIMEOUT || 60000;
+var timeout = process.env.PANDOC_TIMEOUT || 30000;
 
 var outputFormats = [
     'asciidoc',
@@ -18,6 +18,16 @@ var outputFormats = [
     'rtf',
     'textile',
     'docx',
+];
+
+var highlightStyles = [
+    'pygments',
+    'kate',
+    'monochrome',
+    'espresso',
+    'zenburn',
+    'haddock',
+    'tango'
 ];
 
 var disabledExtensions = [
@@ -71,23 +81,36 @@ baseInputFormat = enabledExtensions.reduce(function(baseInputFormat, enabledExte
 
 app.post('/', function(req, res, next) {
 
-    var extensions, params = [];
-    var outputFormat = req.query.format;
+    var extensions = {},
+        options = {},
+        metadata = {},
+        params = [],
+        outputFormat = req.query.format;
     outputFormat = outputFormats.indexOf(outputFormat) !== -1 ? outputFormat : 'pdf';
     try {
         extensions = JSON.parse(req.query.extensions);
-    } catch (e) {
-        extensions = {};
-    }
+    } catch (e) {}
+    try {
+        options = JSON.parse(req.query.options);
+    } catch (e) {}
+    try {
+        metadata = JSON.parse(req.query.metadata);
+    } catch (e) {}
 
     var inputFormat = switchableExtensions.reduce(function(inputFormat, switchableExtension) {
         return inputFormat + (extensions[switchableExtension] ? '+' : '-') + switchableExtension;
     }, baseInputFormat);
 
     params.push('--webtex=http://chart.apis.google.com/chart?cht=tx\&chf=bg,s,FFFFFF00\&chco=000000\&chl=');
-    if (extensions.typographer) {
-        params.push('--smart');
-    }
+    extensions.typographer && params.push('--smart');
+    options.toc && params.push('--toc');
+    options.tocDepth = parseInt(options.tocDepth);
+    !isNaN(options.tocDepth) && params.push('--toc-depth', options.tocDepth);
+    options.highlightStyle = highlightStyles.indexOf(options.highlightStyle) !== -1 ? options.highlightStyle : 'kate';
+    params.push('--highlight-style', options.highlightStyle);
+    Object.keys(metadata).forEach(function(key) {
+        params.push('-M', key + '=' + metadata[key].toString());
+    });
 
     tmp.file({
         postfix: outputFormat === 'pdf' ? '.pdf' : ''
@@ -119,7 +142,7 @@ app.post('/', function(req, res, next) {
 
         var binPath = process.env.PANDOC_PATH || '/root/.cabal/bin/pandoc';
         outputFormat = outputFormat === 'pdf' ? 'latex' : outputFormat;
-        params.push('-f', inputFormat, '-t', outputFormat, '--highlight-style', 'kate', '-o', path);
+        params.push('-f', inputFormat, '-t', outputFormat, '-o', path);
         var pandoc = spawn(binPath, params, {
             stdio: [
                 'pipe',
