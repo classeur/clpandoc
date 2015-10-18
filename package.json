@@ -1,0 +1,26 @@
+{
+  "name": "clpandoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/classeur/clpandoc.git"
+  },
+  "author": "Benoit Schweblin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/classeur/clpandoc/issues"
+  },
+  "homepage": "https://github.com/classeur/clpandoc#readme",
+  "dependencies": {
+    "clgulp": "^1.0.1",
+    "express": "^4.13.3",
+    "gulp": "^3.9.0",
+    "tmp": "0.0.28"
+  },
+  "devDependencies": {}
+}
