@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp start"
   },
   "repository": {
     "type": "git",
@@ -17,10 +18,13 @@
   },
   "homepage": "https://github.com/classeur/clpandoc#readme",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "clgulp": "^1.0.1",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
     "tmp": "0.0.28"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint-config-classeur": "^1.0.1"
+  }
 }
