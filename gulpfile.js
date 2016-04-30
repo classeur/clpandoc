@@ -25,7 +25,7 @@ gulp.task('start', ['default'], function (cb) {
       'docker rm clpandoc-container'
     ], function () {
       exec([
-        'docker run -i -p 3000:3000 --name=clpandoc-container classeur/clpandoc:' + version
+        'docker run -ti -p 3000:3000 --name=clpandoc-container classeur/clpandoc:' + version
       ], cb)
     })
   })

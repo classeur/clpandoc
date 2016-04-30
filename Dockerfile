@@ -11,9 +11,9 @@ RUN apt-get update -y \
 RUN curl -SLO "http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz" \
   && tar -xzf "install-tl-unx.tar.gz" \
   && cd install-tl-* \
-  && (echo I | ./install-tl) \
+  && (printf "O\nD\nS\nR\nI\n" | ./install-tl) \
   && cd .. \
-  && rm -rf "install-tl*"
+  && rm -rf install-tl* /usr/local/texlive/2015/texmf-dist/doc
 ENV PATH /usr/local/texlive/2015/bin/x86_64-linux:$PATH
 
 # Install pandoc
